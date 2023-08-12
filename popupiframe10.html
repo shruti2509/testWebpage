@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ring_page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<style>
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 320px;
+      /* height: 300px; */
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50vw;
+      height: 68vh;
+      background-color: white;
+      /* opacity: 0.9; */
+      z-index: 1;
+    }
+
+    #popup-iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .card{
+        justify-content: left ;
+        align-items: center;
+        display: flex;
+        width: 100rem;
+        box-shadow: 5px 10px grey;
+        padding: 20px;
+        height: 44rem;
+        margin-top: -48px;
+      }
+      .btn:hover{
+        transform:scale(1.1) ;
+      }
+      
+
+  </style>
+
+<body>
+
+
+    <!-- card -->
+    
+        <!-- first card -->
+      <div style="margin-top: 50px; display: flex; justify-content: center; border: 5px black;">
+        <div class="card">
+        <div style="padding-left: 50px; padding-right: 50px;">
+        <img src="data:image/jpeg;base64,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" class="card-img-top" height="200px" width="150px" alt="ring">
+      </div>
+        <div class="card-body">
+          <h5 class="card-title">Elite Diamond Ring</h5>
+          <p class="fw-light">18KT White Gold</p>
+          <div style="display: flex; flex-direction: left; align-content: center; align-items: center; ">
+            <div style="width: 300px; display: flex;">
+              <div style="display: flex;">
+              <button class="button" onclick="totalClick(1)" style="border-radius: 5px;">+</button>
+              <span id="totalClicks" style="margin-left: 2px; margin-right: 2px;">0</span>
+               <button class="button" onclick="totalClick(-1)" style="border-radius: 5px;">-</button>
+           </div>
+          <h5 style="text-align: right; margin-left: 184px;">$7,349</h5>
+      </div>
+        </div>
+          <br>
+          <div class="card-text" style="background-color: rgb(246, 240, 240); border-radius: 20px 0px; height: 171px;">
+            <p style="padding-top: 20px; margin-top: 5px; padding-left: 20px;"><strong>About</strong>
+              <p style="padding-left: 20px;" >An alluring halo of diamonds embrace and accentuate the center gem of this brilliant antique-style ring. Diamond accents on the band add a truly dazzling effect.</p>
+            </p>
+          </div>
+          <div style="display: flex;">
+          <a href="#" class="btn btn-primary" style="">Add to cart</a>
+          <a  class="btn btn-primary" id="popup-button" target="webcam" style="margin-left: 120px;">try on </a>
+          <div id="overlay"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  
+   
+        
+        <div id="popup">
+          <button id="close-but" onclick="closeWin()" style="border-radius: 5px; background-color: white; color: black; float: right; border-color: white;">x</button>
+          <iframe src="webcam.html" id="popup-iframe"></iframe>
+        </div>
+    
+        <script>
+          const button = document.getElementById("popup-button");
+          const overlay = document.getElementById("overlay");
+          const popup = document.getElementById("popup");
+    
+          button.addEventListener("click", function () {
+            overlay.style.display = "block";
+            popup.style.display = "block";
+          });
+    
+          overlay.addEventListener("click", function () {
+            overlay.style.display = "none";
+            popup.style.display = "none";
+          });
+
+
+
+
+          // cose popup
+
+
+
+          function closeWin()   // Tested Code
+{
+var someIframe = window.parent.document.getElementById('popup');
+someIframe.parentNode.removeChild(someIframe);
+}
+
+//           // close
+
+//           function ClosePop() {
+//     var layer = document.getElementById("overlay");
+//     var iframe = document.getElementById("popup");
+//     document.body.removeChild(layer); // remove layer
+//     document.body.removeChild(iframe); // remove div
+// }
+
+
+
+
+          function totalClick(click) {
+    const totalClicks = document.getElementById('totalClicks');
+    const sumvalue = parseInt(totalClicks.innerText) + click;
+    console.log(sumvalue + click);
+    totalClicks.innerText = sumvalue;
+    // avoid negative
+    if (sumvalue < 0){
+      totalClicks.innerText = 0;
+    } 
+    }
+        </script>
+     
+     
+</body>
+</html>
